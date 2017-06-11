@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style>
+		.box1{
+			width:100px;
+			height:100px;
+			position: absolute;
+			background:red;
+		}
+		.box2{
+			width:100px;
+			height:100px;
+			position: absolute;
+			left: calc(50% - 50px);
+     		top: calc(50% - 50px);
+			background:aliceblue;
+		}
+	</style>
+	<body>
+		<div class="box1"></div>
+		<div class="box2"></div>
+		<script>
+				var box1=document.querySelector('.box1')
+				var box2=document.querySelector('.box2')
+				var q = box2.getBoundingClientRect();
+				box1.onmousedown=function(e){
+					 var dx = e.pageX  - this.offsetLeft;
+					  var dy = e.pageY - this.offsetTop;
+					document.onmousemove=function(e){
+						var l=e.pageX-dx ;
+						var t=e.pageY-dy;
+						if(q.left < l + box2.offsetWidth && q.top < t + box2.offsetHeight && q.right > l && q.bottom > t){
+							box2.style.background="blue";
+							setTimeout(function(){
+								box2.style.display="none"
+							},1000)
+						}
+						box1.style.left=l+'px';
+						box1.style.top=t+'px';
+					}
+					document.onmouseup=function(e){
+					this.onmousemove = null;
+					}
+				}
+				
+		</script>
+	</body>
+</html>
