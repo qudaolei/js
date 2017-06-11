@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#box {
+				position: relative;
+				margin: 10px auto;
+				width: 660px;
+				height: 500px;
+				overflow: hidden;
+			}
+			#div {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 500px;
+				
+			}
+			input {
+				width: 80px;
+				height: 40px;
+			}	
+			#pre {
+				position: absolute;
+				top: 50%;
+				left: 0;
+				margin-top: -20px;
+			}
+			#next {
+				position: absolute;
+				top: 50%;
+				right: 0;
+				margin-top: -20px;
+			}
+			img {
+				float: left;
+				position: relative;
+				left: 0;
+				top: 50px;
+				width: 660px;
+				height: 360px;
+				transform: 2s;
+			}
+			.icons span {
+				float: left;
+				width: 16px;
+				height: 16px;
+				border-radius: 8px;
+				background: #606060;
+				margin: 0px 10px;	
+			}
+
+			.icons span.yellow{
+				background: yellow;
+			}
+
+			.icons {
+				position: absolute;
+				bottom: 0px;
+				text-align: center;
+			}
+		</style>
+		<script src="../jquery-3.2.0.js"></script>
+		<script>
+
+		</script>
+	</head>
+	<body>
+		<div id="box">
+			<div id="div">
+				<img src="img/20140926152644.jpg" />
+				<img src="img/20141029201036.jpg" />
+				<img src="img/20141106193135.jpg" />
+				<img src="img/20141106193506.jpg" />
+				<img src="img/20141106193823.jpg" />
+			</div>
+			<div class="icons">
+				<span id="span1" class="yellow"></span>
+				<span id="span2"></span>
+				<span id="span3"></span>
+				<span id="span4"></span>
+				<span id="span5"></span>
+			</div>
+			<input id="pre"  type="button" value="上一张" />
+			<input id="next" type="button" value="下一张" />
+		</div>
+		<script>
+			var divs=$('#div')
+			var spans = $(".icons span");
+			divs.find("img:first").clone().appendTo(divs);
+			var imgs=divs.find('img');//图片
+			var len =imgs.length;
+			var imgsc=imgs.width();//获取图片的宽
+			
+			divs.width(imgsc*len);//容器的宽度
+			
+			var n=0;
+			
+			$('#next').on('click',function(){
+				//动画没完成之前,点击不继续
+				imgs.show();
+				divs.css('left',-n*imgsc)
+				if( divs.is(":animated") ) return;
+				n++;
+				if( n === len-1 ){
+					spans.removeClass('yellow').eq(0).addClass("yellow");
+				}else{
+				spans.removeClass('yellow').eq(n).addClass("yellow");
+				}
+				divs.animate({
+					left:-n*imgsc
+				},function(){
+					if( n === len - 1 ){
+						divs.css("left",0);
+						n = 0;
+					}	
+				})
+			})
+			//上一张
+			$("#pre").on("click",function (){
+				imgs.show();
+				divs.css('left',-n*imgsc)
+				if( divs.is(":animated") ) return;
+				n--;
+				if(n==-1){
+					divs.css('left',-(len-1)*imgsc);
+					n=len-2;
+				}
+				spans.removeClass('yellow').eq(n).addClass("yellow");
+				divs.animate({
+					left:-n*imgsc
+				})
+			})
+			//点
+			spans.on("mouseover",function (){
+				var index = $(this).index();
+				if(index-n==0){
+					return
+				}
+					
+				imgs.hide()
+				imgs.eq([n]).show()
+				imgs.eq([index]).show()
+				if(n<index){
+					divs.css('left',0)
+					divs.animate({
+					left: -imgsc
+					})
+				}else{
+					divs.css('left',-imgsc)
+					divs.animate({
+					left: 0
+					})
+				}
+				spans.removeClass('yellow').eq(index).addClass("yellow");
+				n = index;
+			})
+		</script>
+	</body>
+</html>

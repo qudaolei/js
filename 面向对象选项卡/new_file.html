@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script type="text/miaov">
+		</script>
+		<style>
+			p {
+				width:100px;
+				height:100px;
+				border:1px solid #000;
+				display: none;}
+		</style>
+		<script>
+			
+		</script>
+	</head>
+	
+	<body>
+		<div id="div1">
+			<input type="button" value="按钮一" style="background: red;" />
+			<input type="button" value="按钮二" />
+			<input type="button" value="按钮三" />
+			<p style="display: block;">内容一</p>
+			<p>内容二</p>
+			<p>内容三</p>
+		</div>
+		
+		<div id="div2">
+			<input type="button" value="按钮一" style="background: red;" />
+			<input type="button" value="按钮二" />
+			<input type="button" value="按钮三" />
+			<p style="display: block;">内容一</p>
+			<p>内容二</p>
+			<p>内容三</p>
+		</div>
+		
+		 <input type="button" value="开始播放第二个" id="btn1" />
+		<input type="button" value="停止播放第一个" id="btn2" />
+		<input type="button" value="开始播放所有" id="btn3" />
+		<input type="button" value="停止播放所有" id="btn4" />
+		<input type="button" value="反向播放" id="btn5" /><!-- -->
+		<script>
+			
+			function aaa(bb){
+				this.inputs = bb.getElementsByTagName("input");	
+				this.ps = bb.getElementsByTagName("p");
+
+				this.len = this.inputs.length;
+
+				this.timer = null;
+			}
+			//点击事件
+			aaa.prototype.init = function (){
+				var that = this;
+				for( var i = 0; i < this.len; i++ ){
+					this.inputs[i].index = i;
+					this.inputs[i].onclick = function (){
+						that.play(this.index);	
+					};
+				}
+			};
+			//改变颜色	，显示框
+			aaa.prototype.play = function (index){
+				for( var i = 0; i < this.len; i++ ){
+					this.inputs[i].style.backgroundColor = '';
+					this.ps[i].style.display = 'none';
+				}
+				this.inputs[index].style.backgroundColor = 'red';
+				this.ps[index].style.display = 'block';	
+			};
+			//定时器循环
+			aaa.prototype.autoPlay = function (){
+				var n = 0;
+				var that = this;
+				
+				if(!this.timer){this.timer = setInterval(function (){
+					n++;
+					if( n > that.len - 1 ){
+						n = 0;
+					}
+					that.play(n);
+				},1000)	}
+			}
+			//停止
+			aaa.prototype.stop = function (){
+				clearInterval(this.timer);
+				this.timer = null;
+			}
+			
+			aaa.prototype.status = function (){
+				return !!this.timer;
+			}
+
+
+
+			var div1 = document.getElementById("div1");
+			var div2 = document.getElementById("div2");
+
+			var t1 = new aaa(div1);
+
+			t1.init(); 
+
+			t1.autoPlay();
+
+			var t2 = new aaa(div2);
+
+			t2.init();
+			btn1.onclick = function (){
+				t2.autoPlay();	
+			};
+			btn2.onclick = function (){
+				t1.stop();	
+			};
+			btn3.onclick = function (){
+				if(!t1.status()){
+					t1.autoPlay();
+				}
+				if(!t2.status()){
+					t2.autoPlay();
+				}
+				
+				
+			};
+			btn4.onclick = function (){
+				t1.stop();
+				t2.stop();
+			};
+			btn5.onclick = function (){
+				if(t1.status()){
+					t1.stop();
+				}else{
+					t1.autoPlay()
+				}
+				if(t2.status()){
+					t2.stop();
+				}else{
+					t2.autoPlay()
+				}
+			};
+
+		</script>
+	</body>
+</html>
